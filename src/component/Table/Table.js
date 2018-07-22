@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import Button from '../Button/Button';
 
@@ -51,4 +52,9 @@ const midColumn = {
 
 const smallColumn = {
     width: '10%',
+};
+
+Table.propTypes = {
+    list: PropTypes.array.isRequired,
+    onDismiss: PropTypes.func.isRequired,
 };
