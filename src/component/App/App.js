@@ -150,7 +150,6 @@ class App extends Component {
                         onDismiss={this.onDismiss}
                     />
                 }
-                <Loading/>
                 <div className="interactions">
                     {isLoading
                         ? <Loading/>
@@ -187,6 +186,4 @@ const list = [
 ];
 
 const Loading = () =>
-    <div>
-        Favorite Food: <FontAwesomeIcon icon="spinner" />
-    </div>
+    <FontAwesomeIcon icon="spinner" />
