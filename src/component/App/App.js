@@ -4,7 +4,7 @@ import React, {
 import './App.css';
 import Search from '../Search/Search'
 import Table from '../Table/Table'
-import Button from '../Button/Button'
+import {ButtonWithLoading} from '../Button/Button'
 
 import {
     DEFAULT_QUERY,
@@ -17,8 +17,9 @@ import {
 } from '../../constants/';
 
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faStroopwafel,faSpinner } from '@fortawesome/free-solid-svg-icons'
+// 全局绑定
 library.add(faStroopwafel,faSpinner)
 
 
@@ -151,13 +152,12 @@ class App extends Component {
                     />
                 }
                 <div className="interactions">
-                    {isLoading
-                        ? <Loading/>
-                        : <Button
-                            onClick={() => this.fetchSearchTopStories(searchKey, page + 1)}>
-                            More
-                        </Button>
-                    }
+                    <ButtonWithLoading
+                        isLoading={isLoading}
+                        onClick={() => this.fetchSearchTopStories(searchKey, page + 1)}
+                    >
+                        More
+                    </ButtonWithLoading>
                 </div>
             </div>
         );
@@ -185,5 +185,4 @@ const list = [
     },
 ];
 
-const Loading = () =>
-    <FontAwesomeIcon icon="spinner" />
+
