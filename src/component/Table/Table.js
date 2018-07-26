@@ -1,7 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {sortBy} from 'lodash';
+import classNames from 'classnames';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faAngleUp, faAngleDown } from '@fortawesome/free-solid-svg-icons'
 
-import Button from '../Button/Button';
+import Button,{ButtonWithSortReverse} from '../Button/Button';
+
+const SORTS = {
+    NONE: list => list,
+    TITLE: list => sortBy(list, 'title'),
+    AUTHOR: list => sortBy(list, 'author'),
+    COMMENTS: list => sortBy(list, 'num_comments').reverse(),
+    POINTS: list => sortBy(list, 'points').reverse(),
+};
 
 const isItem = onDismiss => item =>
     (
@@ -18,11 +30,72 @@ const isItem = onDismiss => item =>
         </div>
     )
 
-const Table = ({list, pattern, onDismiss}) => {
+const Sort = ({sortKey, onSort, isSortReverse, ...rest}) =>{
+    return(
+        <ButtonWithSortReverse
+            sortKey={sortKey}
+            isSortReverse={isSortReverse}
+            onClick={() => onSort(sortKey,isSortReverse)}
+            {...rest}
+        />
+    )
+}
+
+
+const Table = ({list, sortKey, isSortReverse, onDismiss, onSort}) => {
+    const sortedList = SORTS[sortKey](list);
+    const reverseSortedList = isSortReverse
+        ? sortedList.reverse()
+        : sortedList;
 
     return (
         <div className="table">
-            {list.map(isItem(onDismiss))}
+            <div className="table-header">
+              <span style={{width: '40%'}}>
+                <Sort
+                    activeKey={sortKey}
+                    sortKey={'TITLE'}
+                    isSortReverse={isSortReverse}
+                    onSort={onSort}
+                >
+                  Title
+                </Sort>
+              </span>
+                <span style={{width: '30%'}}>
+                <Sort
+                    activeKey={sortKey}
+                    sortKey={'AUTHOR'}
+                    isSortReverse={isSortReverse}
+                    onSort={onSort}
+                >
+                  Author
+                </Sort>
+              </span>
+                <span style={{width: '10%'}}>
+                <Sort
+                    activeKey={sortKey}
+                    sortKey={'COMMENTS'}
+                    isSortReverse={isSortReverse}
+                    onSort={onSort}
+                >
+                  Comments
+                </Sort>
+              </span>
+                <span style={{width: '10%'}}>
+                <Sort
+                    activeKey={sortKey}
+                    sortKey={'POINTS'}
+                    isSortReverse={isSortReverse}
+                    onSort={onSort}
+                >
+                  Points
+                </Sort>
+              </span>
+                <span style={{width: '10%'}}>
+                Archive
+              </span>
+            </div>
+            {reverseSortedList.map(isItem(onDismiss))}
         </div>
     );
 

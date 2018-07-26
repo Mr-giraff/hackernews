@@ -16,11 +16,11 @@ import {
     PARAM_HPP,
 } from '../../constants/';
 
-import { library } from '@fortawesome/fontawesome-svg-core'
+import {library} from '@fortawesome/fontawesome-svg-core'
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faStroopwafel,faSpinner } from '@fortawesome/free-solid-svg-icons'
+import {faStroopwafel, faSpinner} from '@fortawesome/free-solid-svg-icons'
 // 全局绑定
-library.add(faStroopwafel,faSpinner)
+library.add(faStroopwafel, faSpinner)
 
 
 class App extends Component {
@@ -35,6 +35,8 @@ class App extends Component {
             searchTerm: DEFAULT_QUERY,
             error: null,
             isLoading: false,
+            sortKey: 'NONE',
+            isSortReverse: false,
         }
         this.needsToSearchTopStories = this.needsToSearchTopStories.bind(this);
         this.setSearchTopStories = this.setSearchTopStories.bind(this);
@@ -42,6 +44,7 @@ class App extends Component {
         this.onSearchChange = this.onSearchChange.bind(this);
         this.onSearchSubmit = this.onSearchSubmit.bind(this);
         this.onDismiss = this.onDismiss.bind(this);
+        this.onSort = this.onSort.bind(this);
     }
 
     componentDidMount() {
@@ -50,10 +53,10 @@ class App extends Component {
         this.fetchSearchTopStories(searchTerm);
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
-        console.log('hello')
-        return true;
-    }
+    // shouldComponentUpdate(nextProps, nextState) {
+    //     console.log('hello')
+    //     return true;
+    // }
 
     setSearchTopStories(result) {
         const {hits, page} = result;
@@ -117,8 +120,13 @@ class App extends Component {
         });
     }
 
+    onSort(sortKey) {
+        const isSortReverse = this.state.sortKey === sortKey && !this.state.isSortReverse;
+        this.setState({ sortKey, isSortReverse });
+    }
+
     render() {
-        const {searchTerm, results, searchKey, error, isLoading} = this.state;
+        const {searchTerm, results, searchKey, error, isLoading, sortKey, isSortReverse} = this.state;
         const page = (
             results &&
             results[searchKey] &&
@@ -148,7 +156,10 @@ class App extends Component {
                     </div>
                     : <Table
                         list={list}
+                        sortKey={sortKey}
+                        isSortReverse={isSortReverse}
                         onDismiss={this.onDismiss}
+                        onSort={this.onSort}
                     />
                 }
                 <div className="interactions">

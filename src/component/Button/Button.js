@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCoffee } from '@fortawesome/free-solid-svg-icons'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import {faCoffee, faAngleUp, faAngleDown} from '@fortawesome/free-solid-svg-icons'
+import classNames from 'classnames';
 
 const Button = ({onClick, className = '', children}) => {
     return (
@@ -29,7 +30,7 @@ Button.propTypes = {
 
 // 局部icon对象
 const Loading = () =>
-    <FontAwesomeIcon icon={faCoffee} />
+    <FontAwesomeIcon icon={faCoffee}/>
 
 const WithLoading = (Component) => ({isLoading, ...rest}) => {
     return (
@@ -41,3 +42,34 @@ const WithLoading = (Component) => ({isLoading, ...rest}) => {
 }
 
 export const ButtonWithLoading = WithLoading(Button);
+
+// 局部icon对象
+const AngleUp = () =>
+    <FontAwesomeIcon icon={faAngleUp}/>
+const AngleDown = () =>
+    <FontAwesomeIcon icon={faAngleDown}/>
+
+const WithSortReverse = (Component) => ({isSortReverse, children, ...rest}) => {
+    return (
+        isSortReverse
+            ? <Component {...rest}>{children}<AngleUp/></Component>
+            : <Component {...rest}>{children}<AngleDown/></Component>
+
+    )
+}
+
+const WithActive = (Component) => ({activeKey, sortKey, className, ...rest}) => {
+    const sortClass = classNames(
+        className,
+        'button-inline',
+        {'button-active': sortKey === activeKey}
+    );
+    return (
+        sortKey === activeKey
+            ? <Component className={sortClass} {...rest}/>
+            : <Button className={sortClass} {...rest}/>
+    )
+}
+
+export const ButtonWithSortReverse = WithActive(WithSortReverse(Button));
+
