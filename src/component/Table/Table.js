@@ -1,11 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {sortBy} from 'lodash';
-import classNames from 'classnames';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faAngleUp, faAngleDown } from '@fortawesome/free-solid-svg-icons'
 
-import Button,{ButtonWithSortReverse} from '../Button/Button';
+import Button, {ButtonWithSortReverse} from '../Button/Button';
 
 const SORTS = {
     NONE: list => list,
@@ -30,75 +27,91 @@ const isItem = onDismiss => item =>
         </div>
     )
 
-const Sort = ({sortKey, onSort, isSortReverse, ...rest}) =>{
-    return(
+const Sort = ({sortKey, onSort, isSortReverse, ...rest}) =>
+    (
         <ButtonWithSortReverse
             sortKey={sortKey}
             isSortReverse={isSortReverse}
-            onClick={() => onSort(sortKey,isSortReverse)}
+            onClick={() => onSort(sortKey, isSortReverse)}
             {...rest}
         />
     )
-}
 
+class Table extends React.Component {
 
-const Table = ({list, sortKey, isSortReverse, onDismiss, onSort}) => {
-    const sortedList = SORTS[sortKey](list);
-    const reverseSortedList = isSortReverse
-        ? sortedList.reverse()
-        : sortedList;
+    constructor() {
+        super();
+        this.state = {
+            sortKey: 'NONE',
+            isSortReverse: false,
+        }
+        this.onSort = this.onSort.bind(this);
+    }
 
-    return (
-        <div className="table">
-            <div className="table-header">
+    onSort(sortKey) {
+        const isSortReverse = this.state.sortKey === sortKey && !this.state.isSortReverse;
+        this.setState({sortKey, isSortReverse});
+    }
+
+    render() {
+        const {sortKey, isSortReverse} = this.state;
+        const {list, onDismiss} = this.props;
+        const sortedList = SORTS[sortKey](list);
+        const reverseSortedList = isSortReverse
+            ? sortedList.reverse()
+            : sortedList;
+
+        return (
+            <div className="table">
+                <div className="table-header">
               <span style={{width: '40%'}}>
                 <Sort
                     activeKey={sortKey}
                     sortKey={'TITLE'}
                     isSortReverse={isSortReverse}
-                    onSort={onSort}
+                    onSort={this.onSort}
                 >
                   Title
                 </Sort>
               </span>
-                <span style={{width: '30%'}}>
+                    <span style={{width: '30%'}}>
                 <Sort
                     activeKey={sortKey}
                     sortKey={'AUTHOR'}
                     isSortReverse={isSortReverse}
-                    onSort={onSort}
+                    onSort={this.onSort}
                 >
                   Author
                 </Sort>
               </span>
-                <span style={{width: '10%'}}>
+                    <span style={{width: '10%'}}>
                 <Sort
                     activeKey={sortKey}
                     sortKey={'COMMENTS'}
                     isSortReverse={isSortReverse}
-                    onSort={onSort}
+                    onSort={this.onSort}
                 >
                   Comments
                 </Sort>
               </span>
-                <span style={{width: '10%'}}>
+                    <span style={{width: '10%'}}>
                 <Sort
                     activeKey={sortKey}
                     sortKey={'POINTS'}
                     isSortReverse={isSortReverse}
-                    onSort={onSort}
+                    onSort={this.onSort}
                 >
                   Points
                 </Sort>
               </span>
-                <span style={{width: '10%'}}>
+                    <span style={{width: '10%'}}>
                 Archive
               </span>
+                </div>
+                {reverseSortedList.map(isItem(onDismiss))}
             </div>
-            {reverseSortedList.map(isItem(onDismiss))}
-        </div>
-    );
-
+        );
+    }
 }
 
 // const Table = ({list, pattern, onDismiss}) => {

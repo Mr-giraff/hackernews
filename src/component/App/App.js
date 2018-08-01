@@ -28,15 +28,11 @@ class App extends Component {
     constructor() {
         super();
         this.state = {
-            list,
-            result: null,
             results: null,
             searchKey: '',
             searchTerm: DEFAULT_QUERY,
             error: null,
             isLoading: false,
-            sortKey: 'NONE',
-            isSortReverse: false,
         }
         this.needsToSearchTopStories = this.needsToSearchTopStories.bind(this);
         this.setSearchTopStories = this.setSearchTopStories.bind(this);
@@ -44,7 +40,6 @@ class App extends Component {
         this.onSearchChange = this.onSearchChange.bind(this);
         this.onSearchSubmit = this.onSearchSubmit.bind(this);
         this.onDismiss = this.onDismiss.bind(this);
-        this.onSort = this.onSort.bind(this);
     }
 
     componentDidMount() {
@@ -120,13 +115,8 @@ class App extends Component {
         });
     }
 
-    onSort(sortKey) {
-        const isSortReverse = this.state.sortKey === sortKey && !this.state.isSortReverse;
-        this.setState({ sortKey, isSortReverse });
-    }
-
     render() {
-        const {searchTerm, results, searchKey, error, isLoading, sortKey, isSortReverse} = this.state;
+        const {searchTerm, results, searchKey, error, isLoading } = this.state;
         const page = (
             results &&
             results[searchKey] &&
@@ -156,10 +146,7 @@ class App extends Component {
                     </div>
                     : <Table
                         list={list}
-                        sortKey={sortKey}
-                        isSortReverse={isSortReverse}
                         onDismiss={this.onDismiss}
-                        onSort={this.onSort}
                     />
                 }
                 <div className="interactions">
@@ -176,24 +163,5 @@ class App extends Component {
 }
 
 export default App;
-
-const list = [
-    {
-        title: 'React',
-        url: 'https://facebook.github.io/react/',
-        author: 'Jordan Walke',
-        num_comments: 3,
-        points: 4,
-        objectID: 0,
-    },
-    {
-        title: 'Rdux',
-        url: 'https://facebook.github.io/Rdux/',
-        author: 'Jordan Walke',
-        num_comments: 3,
-        points: 4,
-        objectID: 1,
-    },
-];
 
 
